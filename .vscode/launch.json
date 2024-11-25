@@ -1,0 +1,31 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Program_DB.exe",  // Percorso del tuo eseguibile generato da Makefile
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",  // La cartella di lavoro, di solito la radice del progetto
+            "environment": [],
+            "externalConsole": true,  // Imposta su true se desideri usare una console separata
+            "preLaunchTask": "makedebugbuild",  // Esegui il task di build prima di avviare il debug
+            "MIMode": "gdb",  // Usa gdb se stai usando g++
+            "setupCommands": [
+                {
+                    "description": "Abilitare l'esecuzione nel debugger",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "serverStarted": "",  // Puoi inserire un pattern per identificare l'avvio del server GDB
+            "filterStdout": true,
+            "filterStderr": true,
+            "console": "integratedTerminal"  // Usa terminale integrato di VSCode
+        },
+    ]
+}
