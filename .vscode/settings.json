@@ -72,7 +72,21 @@
         "numbers": "cpp",
         "cinttypes": "cpp",
         "codecvt": "cpp",
-        "ratio": "cpp"
+        "ratio": "cpp",
+        "*.gitignore": "cpp",
+        "hash_map": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp",
+        "charconv": "cpp",
+        "chrono": "cpp",
+        "filesystem": "cpp",
+        "format": "cpp",
+        "forward_list": "cpp",
+        "mutex": "cpp",
+        "condition_variable": "cpp",
+        "span": "cpp",
+        "variant": "cpp"
     },
     "cmake.ignoreCMakeListsMissing": true,
     "makefile.launchConfigurations": [

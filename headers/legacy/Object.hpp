@@ -13,7 +13,7 @@
 
 #pragma once
 
-class Object : AbstractObject{
+class Object : AbstractLocalObject{
 
     private:
 

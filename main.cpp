@@ -3,15 +3,25 @@
 #include <memory>
 #include <filesystem>
 
-#include "headers/object/OptimizedObject/OptimizedObjectBuilder.hpp"
-#include "headers/object/loader/concreteLoaders/ObjLoader.hpp"
-#include "headers/transform/AbstractTransform.hpp"
-#include "headers/transform/concreteTransforms/Transform.hpp"
-#include "headers/GlobalObject.hpp"
+#include "headers/core/object/localObject/OptimizedObject/OptimizedObjectBuilder.hpp"
+#include "headers/core/object/localObject/OptimizedObject/OptimizedObject.hpp"
+#include "headers/core/object/transform/AbstractTransform.hpp"
+#include "headers/core/object/transform/concreteTransform/Transform.hpp"
+#include "headers/core/object/AbstractGlobalObject.hpp"
+#include "headers/core/object/concreteGlobalObject/GlobalObject.hpp"
+#include "headers/core/object/localObject/loader/AbstractLocalObjectLoader.hpp"
+#include "headers/core/object/localObject/loader/concreteLoader/ObjLoader.hpp"
+#include "headers/core/concreteScene/SimpleSceneStub.hpp"
+#include "headers/core/AbstractScene.hpp"
+#include "headers/core/AbstractCamera.hpp"
+#include "headers/core/concreteCamera/Camera.hpp"
+#include "headers/pipeline/AbstractRenderer.hpp"
+#include "headers/pipeline/concreteRenderer/baseOpenGLRenderer/BaseOpenGLRenderer.hpp"
+
+
+
 #include "../include/glm/gtc/quaternion.hpp"
-#include "headers/pipeline/Camera.hpp"
-#include "headers/pipeline/Renderer.hpp"
-#include "headers/pipeline/error.hpp"
+//#include "headers/pipeline/Renderer.hpp"
 
 #define DEBUG true
 
@@ -21,69 +31,29 @@
  */
 
 
-int main(int argc, char* argv[]){    
+int main(int argc, char* argv[]){
 
-    #if DEBUG
-    std::cout << "Starting..." << std::endl;
-    #endif
+    std::string path;
 
-    std::unique_ptr<AbstractObjectBuilder> abstractObjectbuilder = std::make_unique<OptimizedObjectBuilder>();
+    if (argc > 1) {
+        path = argv[1]; // Legge il primo argomento (escludendo il nome del programma)
+    } else {
+        path = "./assets/cube.obj"; // Percorso di default
+    }
 
-    #if DEBUG
-    std::cout << "abstractObjectBuilder done..." << std::endl;
-    #endif
 
-    AbstractLoader* abstractObjectLoader = new ObjLoader(std::move(abstractObjectbuilder), "./teapot.obj");
-
-    #if DEBUG
-    std::cout << "abstractObjectLoader done..." << std::endl;
-    #endif
-
-    AbstractObject* abstractObject = abstractObjectLoader->loadObject().release();
-
-    #if DEBUG
-    std::cout << "abstractObject done..." << std::endl;
-    #endif
-
-    #if DEBUG
-    std::cout << "abstractObjectbuilder deleted..." << std::endl;
-    #endif
+    std::unique_ptr<AbstractLocalObjectBuilder> abstractObjectbuilder = std::make_unique<OptimizedObjectBuilder>();
+    AbstractLocalObjectLoader* abstractObjectLoader = new ObjLoader(std::move(abstractObjectbuilder), path);
+    AbstractLocalObject* abstractObject = abstractObjectLoader->loadObject().release();
 
     delete(abstractObjectLoader);
 
-    #if DEBUG
-    std::cout << "deleting stuff done..." << std::endl;
-    #endif
-    //use the object
-
-    //std::cout << static_cast<std::string>(*abstractObject) << std::endl;
-
     AbstractTransform* transform = new Transform();
-    GlobalObject* globalObject = new GlobalObject(*abstractObject, *transform);
+    std::shared_ptr<AbstractGlobalObject> globalObject = std::make_shared<GlobalObject>(*abstractObject, *transform);
+
     delete(transform);
 
-    std::cout << static_cast<std::string>(*globalObject) << std::endl;
-
-    #if DEBUG
-    std::cout << "appling modifications to the object tranform" << std::endl;
-    #endif
-
-    transform = globalObject->getTransform();
-
-    transform->scale(0.5,0.5,0.5);
-    transform->rotate(glm::quat( 0.707, 0.0,  0.707, 0.0));
-    transform->translate(0,0,0);
-    
-    /**
-    transform->translate(1,2,3);
-    
-    
-
-    */
-
-    std::cout << static_cast<std::string>(*globalObject) << std::endl;
-
-    Camera camera = Camera(
+    std::shared_ptr<AbstractCamera> camera = std::make_shared<Camera>(
         glm::vec3(-5.0f, 0.0f, 0.0f),
         glm::vec3(0.0f, 0.0f, 0.0f),
         glm::vec3(0.0f, 1.0f, 0.0f),
@@ -93,16 +63,47 @@ int main(int argc, char* argv[]){
         10.0f
     );
 
-    Renderer renderer = Renderer(720, 720);
+    std::shared_ptr<AbstractScene> abstractScene = std::make_shared<SimpleSceneStub>(camera);
+    abstractScene->addObject(globalObject);
 
-    renderer.AddObject(*globalObject);
+    std::shared_ptr<AbstractTransform> transform_ptr = globalObject->getTransform();
 
-    renderer.Render(camera);
+    /**
+     * Since it's a shared pointer these changes should be reflected on the image rendered
+     */
+    transform_ptr->scale(0.5,0.5,0.5);
+    transform_ptr->rotate(glm::quat( 0.707, 0.0,  0.707, 0.0));
+    transform_ptr->translate(0,0,0);
+
+    AbstractRenderer* abstractRenderer = new BaseOpenGLRenderer(
+        720,
+        720,
+        abstractScene
+    );
+
+    /**
+    transform->translate(1,2,3);
+    */
+
+    abstractRenderer->start();
+
+    while(true){
+        std::string input;
+        std::cout << "Scrivi: ";
+        std::cin >> input;
+
+        if (input == "esci") {
+            break; // Esce dal ciclo se l'utente digita 'esci'
+        }
+
+        std::cout << "Hai inserito: " << input << std::endl;
+    }
+
+    abstractRenderer->stop();
+    delete(abstractRenderer);
 
     //delete the object
 
     std::cout << "Done" << std::endl;
-
-    delete(abstractObject);
-    delete(globalObject);
+    
 }
