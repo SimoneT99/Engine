@@ -10,6 +10,9 @@ void handleOpenGLError(GLenum error, const char* file, int line, bool verbose_ha
 		std::cout << "found in file : " << file << " and line " << line;
 	}
 	std::cout << std::endl;
+	#if CLOSE_ON_ERROR
+		std::exit(EXIT_FAILURE);
+	#endif
 }
 
 void checkOpenGLError(const char* file, int line) {
@@ -42,4 +45,8 @@ std::string print_matrix(glm::mat4x4 mat){
             oss << "\n"; // Vai a capo tra le righe
     }
     return oss.str();
+}
+
+void GlfwErrorCallback(int, const char* err_str){
+	std::cout << "GLFW Error: " << err_str << std::endl;
 }

@@ -9,7 +9,8 @@
 
 #pragma once
 
-#define VERBOSE_HANDLER false
+#define VERBOSE_HANDLER true
+#define CLOSE_ON_ERROR true
 #define ASSERT(x) if (!(x)){ __debugbreak(); }
 
 
@@ -31,3 +32,5 @@ void GLClearError();
 #define GLCALL(x) CLEAR_OPENGL_ERROR(); x; CHECK_OPENGL_ERROR();
 
 std::string print_matrix(glm::mat4x4 mat);
+
+void GlfwErrorCallback(int, const char*);

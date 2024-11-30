@@ -1,5 +1,10 @@
 #include "../headers/core/concreteScene/SimpleSceneStub.hpp"
 
+SimpleSceneStub::SimpleSceneStub(std::shared_ptr<AbstractCamera> scene_camera){
+    this->scene_camera = scene_camera;
+    this->global_objects = std::make_shared<std::vector<std::shared_ptr<AbstractGlobalObject>>>(); 
+}
+
 std::shared_ptr<AbstractCamera> SimpleSceneStub::getCamera() const{
     return this->scene_camera;
 }
@@ -25,5 +30,5 @@ void SimpleSceneStub::clearObjectChanges(){
 }
 
 void SimpleSceneStub::addObject(std::shared_ptr<AbstractGlobalObject> object){
-    
+    this->global_objects->push_back(object);
 }

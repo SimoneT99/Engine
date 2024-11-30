@@ -18,8 +18,7 @@ class SimpleSceneStub : public AbstractScene{
 
         SimpleSceneStub(
             std::shared_ptr<AbstractCamera> scene_camera
-        ) : scene_camera(scene_camera){
-        }
+        );
 
         std::shared_ptr<AbstractCamera> getCamera() const override;
         bool hasCameraChanged() const override;

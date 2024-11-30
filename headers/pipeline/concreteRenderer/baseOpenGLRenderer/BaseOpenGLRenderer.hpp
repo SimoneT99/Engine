@@ -20,16 +20,28 @@
  * Toy renderer Using OpenGL
  */
 
-#define DEBUG_MODE True
-#define LOCAL_OBJECT_CHANGES_ENABLED False
-#define GLOBAL_OBJECT_CHANGES_ENABLED False
-#define PRELOAD_SCENE_BEFORE_START True
+#define DEBUG_MODE true
+#define LOCAL_OBJECT_CHANGES_ENABLED false
+#define GLOBAL_OBJECT_CHANGES_ENABLED false
+#define PRELOAD_SCENE_BEFORE_START true
+#define LOG_ACTIONS true
+#define LOG_ACTIONS_VERBOSE false
+
+#if LOG_ACTIONS
+    #if LOG_ACTIONS_VERBOSE
+        #define LOG(x) {std::cout << x << " at " << __FILE__ << " in line "<< __LINE__ <<  std::endl;}
+    #else
+        #define LOG(x) {std::cout << x << std::endl;}
+    #endif
+#else
+    #define LOG(x)
+#endif
 
 class BaseOpenGLRenderer : public AbstractRenderer{
 
     private:
         GLFWwindow* window;
-        std::unordered_map<int, OpenGLObjectInformations> object_information_mapper;
+        std::unordered_map<unsigned long, OpenGLObjectInformations> object_information_mapper;
     
         /**
          * Shader Management
@@ -40,7 +52,7 @@ class BaseOpenGLRenderer : public AbstractRenderer{
         
         int view_matrix_location = -1;
         int projection_matrix_location = -1;
-
+        unsigned int shader = -1;
         
         /**
          * Render loop

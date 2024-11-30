@@ -90,10 +90,15 @@ BaseOpenGLRenderer::BaseOpenGLRenderer(
     ) : AbstractRenderer(width, height, abstractScene){
 
         this->running = false;
+        this->object_information_mapper = std::unordered_map<unsigned long, OpenGLObjectInformations>();
 
         if (!glfwInit()){
             throw -1;
         }
+
+        glfwSetErrorCallback(GlfwErrorCallback);
+
+        LOG("Window preprocessing...")
 
         /* We can specify the version of OPENGL and the mode */
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -101,14 +106,17 @@ BaseOpenGLRenderer::BaseOpenGLRenderer(
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //this will make required the explicit definition of the VAO
         glfwWindowHint(GLFW_DEPTH_BITS, 24);
 
+        LOG("Creating window...")
         /* Create a windowed mode window and its OpenGL context */
         window = glfwCreateWindow(width, height, "Renderer", NULL, NULL);
-
         if (!window)
         {
+            LOG("Error in window generation...")
             glfwTerminate();
             throw -2;
         }
+
+        LOG("Setting context...")
 
         /* Make the window's context current */
         glfwMakeContextCurrent(window);
@@ -119,55 +127,76 @@ BaseOpenGLRenderer::BaseOpenGLRenderer(
             throw -3;
         }
 
+        LOG("Depth test setup...")
         GLCALL(glDepthFunc(GL_LEQUAL));
         GLCALL(glEnable(GL_DEPTH_TEST));
+
+        LOG("Initial setup done...")
     }
 
 void BaseOpenGLRenderer::preprocess(){
     /**
      * BAD: This is bad design since it depends on the shader used...
      */
-
-    std::vector<std::string> shaders = this->parseShader("shaders/SimpleShaders.shader");
-    unsigned int shader = this->createShader(shaders.at(0), shaders.at(1));
+    LOG("Preprocessing step...")
+    LOG("Preparing shaders...")
+    std::vector<std::string> shaders = this->parseShader("./shaders/SimpleShaders.shader");
+    this->shader = this->createShader(shaders.at(0), shaders.at(1));
 
     GLCALL(glUseProgram(shader));
 
+    #if DEBUG_MODE
+        int currentProgram = 0;
+        glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
+        std::cout << "Current shader " << currentProgram << std::endl;
+    #endif
+
     GLCALL(this->view_matrix_location = glGetUniformLocation(shader, "viewMatrix"));
     GLCALL(this->projection_matrix_location = glGetUniformLocation(shader, "projectionMatrix"));
+
     GLCALL(unsigned int blockIndex = glGetUniformBlockIndex(shader, "ModelTransform"));
     GLCALL(glUniformBlockBinding(shader, blockIndex, 0));
 
+    
     #if PRELOAD_SCENE_BEFORE_START
-
+        LOG("Preloading scene...")
         this->object_information_mapper.clear();
+        LOG("Mapper cleared...")
         for(const std::shared_ptr<AbstractGlobalObject>& object : *this->abstractScene->getAllObjects()){
             this->add_object(object);
         }
-
     #endif
 }
 
 void BaseOpenGLRenderer::start(){
+    LOG("Starting scene called...")
     this->preprocess();
-    
     if(this->running){
-        std::cout << "Warning: tried to start an already running instance of an openGL renderer";
+        LOG("Warning: tried to start an already running instance of an openGL renderer")
         return;
-    }
+    }  
     running = true;
+    LOG("Releasing the context in main thread...")
+    glfwMakeContextCurrent(nullptr);
+
+    LOG("Starting scene thread...")
     this->render_thread = std::thread(&BaseOpenGLRenderer::render_loop, this);
 }
 
 void BaseOpenGLRenderer::stop(){
-    
+    LOG("Stopping scene called...")
     this->running = false;
     if(this->render_thread.joinable()){
         this->render_thread.join();
+        glfwMakeContextCurrent(this->window);
     }
 }
 
 void BaseOpenGLRenderer::render_loop(){
+
+    //We have to take the context in this thread
+    LOG("Taking the context control...")
+    glfwMakeContextCurrent(this->window);
 
     /**
      * the render loop is simple for now:
@@ -176,22 +205,35 @@ void BaseOpenGLRenderer::render_loop(){
      *  ->we tell OpenGL the VAOs to render
      */
 
+    glfwSwapInterval(220); 
+
+    LOG("Entering render loop...")
     while(this->running){
+        
         /**
          * Updating stuff
          */
+        LOG("Updating Objects...")
         this->update_objects();
+        LOG("Updating Camera...")
         this->update_camera();
 
         /**
          * Actual rendering
          */
+        LOG("Clearing buffers...")
         GLCALL(glClear(GL_COLOR_BUFFER_BIT));
         GLCALL(glClear(GL_DEPTH_BUFFER_BIT));
+        LOG("Sending VAOs...")
         this->render_VAOs();
+        LOG("Ending this frame render...")
         GLCALL(glfwSwapBuffers(this->window));
         GLCALL(glfwPollEvents());
+        LOG("Cicle done...")
     }
+
+    LOG("Releasing the context in child thread...")
+    glfwMakeContextCurrent(nullptr);
 }
 
 /**
@@ -275,6 +317,8 @@ void BaseOpenGLRenderer::update_objects(){
 void BaseOpenGLRenderer::add_object(const std::shared_ptr<AbstractGlobalObject>& object){
     //We need to generate the information object
 
+    LOG("Adding object...")
+
     unsigned int vao;
     unsigned int vertex_buffer_id;
     unsigned int index_buffer_id;
@@ -286,10 +330,12 @@ void BaseOpenGLRenderer::add_object(const std::shared_ptr<AbstractGlobalObject>&
 
 
     //VAO Definition (see below)
+    LOG("VAO definition...")
     GLCALL(glGenVertexArrays(1, &vao));
     GLCALL(glBindVertexArray(vao));
 
     //Vertex buffer
+    LOG("Vertex buffer definition...")
     GLCALL(glGenBuffers(1, &vertex_buffer_id));
     GLCALL(glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id)); //GL_ARRAY_BUFFER tell OPENGL to use the buffer as vertex attribute data
     GLCALL(glBufferData(GL_ARRAY_BUFFER, vertexes.size() * sizeof(glm::vec4), vertexes.data(), GL_STATIC_DRAW));
@@ -298,17 +344,21 @@ void BaseOpenGLRenderer::add_object(const std::shared_ptr<AbstractGlobalObject>&
     GLCALL(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0));
 
     //Index buffer (faces)
+    LOG("Index buffer definition...")
     GLCALL(glGenBuffers(1, &index_buffer_id));
     GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_id));
-    GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, faces.size() * sizeof(glm::uvec4), faces.data(), GL_STATIC_DRAW));
+    GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, faces.size() * sizeof(glm::uvec3), faces.data(), GL_STATIC_DRAW));
 
     //Uniform buffer for model transformation
+    LOG("Model transform buffer definition...")
     GLCALL(glGenBuffers(1, &model_transform_buffer_id));
     GLCALL(glBindBuffer(GL_UNIFORM_BUFFER, model_transform_buffer_id));
     GLCALL(glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), nullptr, GL_DYNAMIC_DRAW)); //possible error here
     GLCALL(glBindBufferBase(GL_UNIFORM_BUFFER, 0, model_transform_buffer_id));
 
+    GLCALL(glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4x4), glm::value_ptr(model_transform)));   
 
+    LOG("Pushing into mapper...")
     this->object_information_mapper.insert({object->get_id(), 
         OpenGLObjectInformations(
             vao,
@@ -319,6 +369,7 @@ void BaseOpenGLRenderer::add_object(const std::shared_ptr<AbstractGlobalObject>&
             faces.size()
             )
         });
+    LOG("Done...")
 }
 
 void BaseOpenGLRenderer::update_camera(){
@@ -326,17 +377,41 @@ void BaseOpenGLRenderer::update_camera(){
         /**
          * BAD: violating demeter law!
          */
+        LOG("Getting camera data...")
+        
+        #if DEBUG_MODE
+            int currentProgram = 0;
+            glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
+            std::cout << "Current shader " << currentProgram << std::endl;
+        #endif
+
         glm::mat4x4 view_matrix = this->abstractScene->getCamera()->get_view_matrix();
+        LOG(print_matrix(view_matrix))
         glm::mat4x4 projection_matrix = this->abstractScene->getCamera()->get_projection_matrix();
-        GLCALL(glUniformMatrix4fv(view_matrix_location, 1, GL_FALSE, glm::value_ptr(view_matrix)));
-        GLCALL(glUniformMatrix4fv(projection_matrix_location, 1, GL_FALSE, glm::value_ptr(projection_matrix)));
+        LOG(print_matrix(projection_matrix))
+
+        LOG("Pushing view matrix data...")
+        #if DEBUG_MODE
+            if (glm::value_ptr(view_matrix) == nullptr) {
+                std::cerr << "Errore: Puntatore alla matrice view_matrix non valido" << std::endl;
+            }
+        #endif
+        GLCALL(glUniformMatrix4fv(this->view_matrix_location, 1, GL_FALSE, glm::value_ptr(view_matrix)));
+        LOG("Pushing projection matrix data...")
+        #if DEBUG_MODE
+            if (glm::value_ptr(projection_matrix) == nullptr) {
+                std::cerr << "Errore: Puntatore alla matrice projection_matrix non valido" << std::endl;
+            }
+        #endif
+        GLCALL(glUniformMatrix4fv(this->projection_matrix_location, 1, GL_FALSE, glm::value_ptr(projection_matrix)));
+        LOG("Done updating camera...")
     }
 }
 
 void BaseOpenGLRenderer::render_VAOs(){
     for(const std::pair<int,OpenGLObjectInformations>& pair : this->object_information_mapper){
         GLCALL(glBindVertexArray(pair.second.get_vao()));
-        GLCALL(glDrawElements(GL_TRIANGLES, pair.second.get_number_of_faces(), GL_UNSIGNED_INT, nullptr));
-        GLCALL(glBindVertexArray(0)); /** BAD: Still dependent on the shader used... */
+        GLCALL(glDrawElements(GL_TRIANGLES, pair.second.get_number_of_faces() * 3, GL_UNSIGNED_INT, nullptr));
     }
+    GLCALL(glBindVertexArray(0));
 }
