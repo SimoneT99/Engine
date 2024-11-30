@@ -53,4 +53,8 @@ public:
 
     glm::mat4x4 get_view_matrix() const override;
     glm::mat4x4 get_projection_matrix() const override;
+
+    virtual void look_at(glm::vec3 point) override;
+    virtual void move_at(glm::vec3 location) override;
+    virtual void set_up_vector(glm::vec3 up) override;
 };

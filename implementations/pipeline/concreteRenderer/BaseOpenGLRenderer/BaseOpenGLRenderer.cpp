@@ -205,7 +205,7 @@ void BaseOpenGLRenderer::render_loop(){
      *  ->we tell OpenGL the VAOs to render
      */
 
-    glfwSwapInterval(220); 
+    glfwSwapInterval(110); 
 
     LOG("Entering render loop...")
     while(this->running){

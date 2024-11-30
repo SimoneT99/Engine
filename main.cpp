@@ -88,15 +88,7 @@ int main(int argc, char* argv[]){
     abstractRenderer->start();
 
     while(true){
-        std::string input;
-        std::cout << "Scrivi: ";
-        std::cin >> input;
-
-        if (input == "esci") {
-            break; // Esce dal ciclo se l'utente digita 'esci'
-        }
-
-        std::cout << "Hai inserito: " << input << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
     abstractRenderer->stop();

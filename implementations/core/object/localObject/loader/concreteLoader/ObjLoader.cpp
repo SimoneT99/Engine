@@ -83,13 +83,13 @@ std::unique_ptr<AbstractLocalObject> ObjLoader::loadObject()
                 switch (vertex_index)
                 {
                 case 0:
-                    v1 = v;
+                    v1 = v - 1;
                     break;
                 case 1:
-                    v2 = v;
+                    v2 = v - 1;
                     break;
                 case 2:
-                    v3 = v;
+                    v3 = v - 1;
                     break;
                 default:
                     throw std::runtime_error("Number of vertexes not supported! make sure the model use max 3 vertexes per face!");
