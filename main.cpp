@@ -89,7 +89,6 @@ int main(int argc, char* argv[]){
                      " up: " << camera_object->get_up_vector().x << " " << camera_object->get_position().y << " " << camera_object->get_position().z  << std::endl;
     #endif
 
-
     std::shared_ptr<AbstractCamera> camera = std::make_unique<ThreadSafeCamera>(camera_object, lense);
 
     std::shared_ptr<AbstractScene> abstractScene = std::make_shared<SimpleSceneStub>(camera);
@@ -119,7 +118,7 @@ int main(int argc, char* argv[]){
     /**
      * Since it's a shared pointer these changes should be reflected on the image rendered
      */
-    transform_ptr->scale(0.5,0.5,0.5);
+    //transform_ptr->scale(0.5,0.5,0.5);
     transform_ptr->rotate(glm::quat( 0.707, 0.0,  0.707, 0.0));
     transform_ptr->translate(0,0,0);
 
@@ -135,8 +134,30 @@ int main(int argc, char* argv[]){
 
     abstractRenderer->start();
 
+    float temp = 0;
+    double tick_rate = 2; //updates in a second
+    double delta_time = 1.0/tick_rate;
+
+    auto start = std::chrono::high_resolution_clock::now();
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+
+
     while(true){
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        
+        start = std::chrono::high_resolution_clock::now();
+        temp = temp < 2 ? temp + 1 * delta_time : -2;
+
+        abstractScene->getCamera()->get_camera_object()->move_at(glm::vec3(-5.0f, temp, 0.0f));
+        abstractScene->getCamera()->get_camera_object()->look_at(glm::vec3(0.0f,0.0f,0.0f));
+
+        end = std::chrono::high_resolution_clock::now();
+
+        elapsed = end - start;
+
+        std::this_thread::sleep_for(
+            std::chrono::duration<double>(std::max(0.0, delta_time - elapsed.count()))
+        );      
     }
 
     abstractRenderer->stop();

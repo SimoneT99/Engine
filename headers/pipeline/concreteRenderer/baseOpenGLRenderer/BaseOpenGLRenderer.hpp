@@ -20,11 +20,11 @@
  * Toy renderer Using OpenGL
  */
 
-#define DEBUG_MODE true
+#define DEBUG_MODE false
 #define LOCAL_OBJECT_CHANGES_ENABLED false
 #define GLOBAL_OBJECT_CHANGES_ENABLED false
 #define PRELOAD_SCENE_BEFORE_START true
-#define LOG_ACTIONS true
+#define LOG_ACTIONS false
 #define LOG_ACTIONS_VERBOSE false
 
 #if LOG_ACTIONS
