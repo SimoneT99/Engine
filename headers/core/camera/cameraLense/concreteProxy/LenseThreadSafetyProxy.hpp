@@ -22,6 +22,16 @@ class LenseThreadSafetyProxy : public AbstractLenseProxy{
         inline void update_projection_matrix();
 
     public:
+
+        LenseThreadSafetyProxy(std::shared_ptr<AbstractLense> lense)
+        : AbstractLenseProxy(lense),
+          vertical_fov_backup(lense->get_vertical_fov()),
+          aspect_ratio_backup(lense->get_aspect_ratio()),
+          near_plane_backup(lense->get_near_plane()),
+          far_plane_backup(lense->get_far_plane()),
+          projection_matrix_backup(lense->get_projection_matrix())
+          {}
+
         glm::mat4x4 get_projection_matrix() const;
 
         void set_vertical_fov(float fov) override;

@@ -1,8 +1,10 @@
 #include "../AbstractCamera.hpp"
 #include "../cameraObject/AbstractCameraObject.hpp"
 #include "../cameraLense/AbstractLense.hpp"
-#include "./cameraObject/concreteProxy/CameraThreadSafetyProxy.hpp"
-#include "./cameraLense/concreteProxy/LenseThreadSafetyProxy.hpp"
+#include "../headers/core/camera/cameraLense/concreteProxy/LenseThreadSafetyProxy.hpp"
+#include "../headers/core/camera/cameraObject/concreteProxy/CameraObjectThreadSafetyProxy.hpp"
+
+#pragma once
 
 class ThreadSafeCamera : public AbstractCamera{
 

@@ -1,6 +1,5 @@
 CC = g++
-OBJS = Camera.o \
-	SimpleSceneStub.o \
+OBJS = SimpleSceneStub.o \
 	Transform.o \
 	AbstractTransform.o \
 	GlobalObject.o \
@@ -11,13 +10,22 @@ OBJS = Camera.o \
 	OptimizedObject.o \
 	BaseOpenGLRenderer.o \
 	OpenGLObjectInformations.o \
-	OpenGLErrorHandling.o
+	OpenGLErrorHandling.o \
+	ThreadSafeCamera.o \
+	Lense.o \
+	LenseThreadSafetyProxy.o \
+	CameraObject.o \
+	CameraObjectThreadSafetyProxy.o
 
 HEADERS = ./headers/
+CLASSES = ./implementations/
+
 CORE = core/
 PIPELINE = pipeline/
+
 OBJECT = object/
-CLASSES = ./implementations/
+CAMERA = ${CORE}camera/
+
 OUT = Program.exe
 OUT_DEBUG = Program_DB.exe
 INCLUDE = ./include
@@ -51,14 +59,10 @@ Main : ${OBJS} main.o
 main.o : main.cpp
 		${CC} ${CFLAGS} -c main.cpp
 
-Camera.o : ${CLASSES}${CORE}concreteCamera/Camera.cpp \
-		   ${HEADERS}${CORE}concreteCamera/Camera.hpp
-		${CC} ${CFLAGS} -c ${CLASSES}${CORE}concreteCamera/Camera.cpp
-
-SimpleSceneStub.o : ${CLASSES}${CORE}concreteScene/SimpleSceneStub.cpp \
-					${HEADERS}${CORE}concreteScene/SimpleSceneStub.hpp \
-					${HEADERS}${CORE}AbstractScene.hpp
-		${CC} ${CFLAGS} -c ${CLASSES}${CORE}concreteScene/SimpleSceneStub.cpp
+SimpleSceneStub.o : ${CLASSES}${CORE}blackboard/concreteScene/SimpleSceneStub.cpp \
+					${HEADERS}${CORE}blackboard/concreteScene/SimpleSceneStub.hpp \
+					${HEADERS}${CORE}blackboard/AbstractScene.hpp
+		${CC} ${CFLAGS} -c ${CLASSES}${CORE}blackboard/concreteScene/SimpleSceneStub.cpp
 
 Transform.o : ${CLASSES}${CORE}${OBJECT}transform/concreteTransform/Transform.cpp \
 			  ${HEADERS}${CORE}${OBJECT}transform/concreteTransform/Transform.hpp \
@@ -69,7 +73,6 @@ Transform.o : ${CLASSES}${CORE}${OBJECT}transform/concreteTransform/Transform.cp
 AbstractTransform.o : ${CLASSES}${CORE}${OBJECT}transform/AbstractTransform.cpp \
 				   	  ${HEADERS}${CORE}${OBJECT}transform/AbstractTransform.hpp
 		${CC} ${CFLAGS} -c ${CLASSES}${CORE}${OBJECT}transform/AbstractTransform.cpp
-
 
 GlobalObject.o : ${CLASSES}${CORE}${OBJECT}concreteGlobalObject/GlobalObject.cpp \
 			  	 ${HEADERS}${CORE}${OBJECT}concreteGlobalObject/GlobalObject.hpp \
@@ -123,3 +126,36 @@ OpenGLObjectInformations.o : ${CLASSES}${PIPELINE}concreteRenderer/baseOpenGLRen
 OpenGLErrorHandling.o :  ${CLASSES}${PIPELINE}concreteRenderer/baseOpenGLRenderer/OpenGLErrorHandling.cpp \
 						 ${HEADERS}${PIPELINE}concreteRenderer/baseOpenGLRenderer/OpenGLErrorHandling.hpp
 		${CC} ${CFLAGS} -c ${CLASSES}${PIPELINE}concreteRenderer/baseOpenGLRenderer/OpenGLErrorHandling.cpp 
+
+#Camera system
+
+ThreadSafeCamera.o : ${CLASSES}${CAMERA}concreteCamera/ThreadSafeCamera.cpp \
+					 ${HEADERS}${CAMERA}concreteCamera/ThreadSafeCamera.hpp \
+					 ${HEADERS}${CAMERA}AbstractCamera.hpp
+	${CC} ${CFLAGS} -c ${CLASSES}${CAMERA}concreteCamera/ThreadSafeCamera.cpp
+
+
+
+Lense.o : ${CLASSES}${CAMERA}cameraLense/concreteLense/Lense.cpp \
+		  ${HEADERS}${CAMERA}cameraLense/concreteLense/Lense.hpp \
+		  ${HEADERS}${CAMERA}cameraLense/AbstractLense.hpp
+		${CC} ${CFLAGS} -c ${CLASSES}${CAMERA}cameraLense/concreteLense/Lense.cpp
+
+LenseThreadSafetyProxy.o : ${CLASSES}${CAMERA}cameraLense/concreteProxy/LenseThreadSafetyProxy.cpp \
+		  ${HEADERS}${CAMERA}cameraLense/concreteProxy/LenseThreadSafetyProxy.hpp \
+		  ${HEADERS}${CAMERA}cameraLense/AbstractLenseProxy.hpp \
+		  ${HEADERS}${CAMERA}cameraLense/AbstractLense.hpp
+		${CC} ${CFLAGS} -c ${CLASSES}${CAMERA}cameraLense/concreteProxy/LenseThreadSafetyProxy.cpp
+
+
+
+CameraObject.o : ${CLASSES}${CAMERA}cameraObject/concreteCameraObject/CameraObject.cpp \
+		  ${HEADERS}${CAMERA}cameraObject/concreteCameraObject/CameraObject.hpp \
+		  ${HEADERS}${CAMERA}cameraObject/AbstractCameraObject.hpp
+		${CC} ${CFLAGS} -c ${CLASSES}${CAMERA}cameraObject/concreteCameraObject/CameraObject.cpp
+
+CameraObjectThreadSafetyProxy.o : ${CLASSES}${CAMERA}cameraObject/concreteProxy/CameraObjectThreadSafetyProxy.cpp \
+		  ${HEADERS}${CAMERA}cameraObject/concreteProxy/CameraObjectThreadSafetyProxy.hpp \
+		  ${HEADERS}${CAMERA}cameraObject/AbstractCameraObjectProxy.hpp \
+		  ${HEADERS}${CAMERA}cameraObject/AbstractCameraObject.hpp
+		${CC} ${CFLAGS} -c ${CLASSES}${CAMERA}cameraObject/concreteProxy/CameraObjectThreadSafetyProxy.cpp

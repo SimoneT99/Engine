@@ -7,7 +7,7 @@
 
 #pragma once
 
-class Camera : public AbstractCameraObject
+class CameraObject : public AbstractCameraObject
 {
 
 private:
@@ -27,7 +27,7 @@ private:
     inline bool vectorIsNull(glm::vec3 vector);
 
 public:
-    Camera(
+    CameraObject(
         glm::vec3 position,
         glm::vec3 target,
         glm::vec3 up)

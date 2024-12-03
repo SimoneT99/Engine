@@ -1,4 +1,4 @@
-#include "../headers/core/AbstractCamera.hpp"
+#include "../headers/core/camera/AbstractCamera.hpp"
 #include "../headers/core/object/AbstractGlobalObject.hpp"
 
 #include <memory>

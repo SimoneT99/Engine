@@ -1,6 +1,8 @@
 #include "./AbstractCameraObject.hpp"
 #include <memory>
 
+#pragma once
+
 class AbstractCameraObjectProxy : public AbstractCameraObject {
 
     protected:

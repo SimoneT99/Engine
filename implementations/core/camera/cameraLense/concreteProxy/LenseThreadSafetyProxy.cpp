@@ -1,4 +1,4 @@
-#include "..\headers\core\camera\lenses\concreteProxy\LenseThreadSafetyProxy.hpp"
+#include "..\headers\core\camera\cameraLense\concreteProxy\LenseThreadSafetyProxy.hpp"
 
 #define WRAP_LENSE_LOCK(x){std::unique_lock<std::mutex> lense_lock(this->lense_write_mutex); x; lense_lock.unlock();}
 #define WRAP_BACKUP_LOCK(x){std::unique_lock<std::mutex> backup_lock(this->proxy_modify_mutex); x; backup_lock.unlock();}

@@ -1,4 +1,4 @@
-#include "../headers/core/AbstractScene.hpp"
+#include "../headers/core/blackboard/AbstractScene.hpp"
 #include <memory>
 
 #pragma once

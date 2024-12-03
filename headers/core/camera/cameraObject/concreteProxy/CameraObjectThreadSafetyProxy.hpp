@@ -27,6 +27,14 @@ class CameraObjectThreadSafetyProxy : public AbstractCameraObjectProxy{
 
     public:
         
+        CameraObjectThreadSafetyProxy(std::shared_ptr<AbstractCameraObject> camera_object) 
+        : AbstractCameraObjectProxy(camera_object),
+          position_backup(camera_object->get_position()),
+          looking_direction_backup(camera_object->get_looking_direction()),
+          up_vector_backup(camera_object->get_up_vector()),
+          view_matrix_backup(camera_object->get_view_matrix())
+        {}
+
         void move_at(glm::vec3 location) override;
         void look_at(glm::vec3 point) override;
         void set_up_vector(glm::vec3 up) override;

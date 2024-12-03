@@ -1,4 +1,4 @@
-#include "../headers/core/camera/concreteProxy/CameraThreadSafetyProxy.hpp"
+#include "../headers/core/camera/cameraObject/concreteProxy/CameraObjectThreadSafetyProxy.hpp"
 
 #define WRAP_CAMERA_LOCK(x){std::unique_lock<std::mutex> camera_lock(this->camera_mutex); x; camera_lock.unlock();}
 #define WRAP_BACKUP_LOCK(x){std::unique_lock<std::mutex> backup_lock(this->backup_mutex); x; backup_lock.unlock();}

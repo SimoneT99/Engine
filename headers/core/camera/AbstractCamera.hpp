@@ -1,7 +1,9 @@
-#include "AbstractCameraObject.hpp"
-#include "AbstractLense.hpp"
+#include "./cameraLense/AbstractLense.hpp"
+#include "./cameraObject/AbstractCameraObject.hpp"
 
 #include <memory>
+
+#pragma once
 
 /**
  * Abstract definition of a camera to put in the scene.

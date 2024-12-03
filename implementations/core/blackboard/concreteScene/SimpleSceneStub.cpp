@@ -1,4 +1,4 @@
-#include "../headers/core/concreteScene/SimpleSceneStub.hpp"
+#include "../headers/core/blackboard/concreteScene/SimpleSceneStub.hpp"
 
 SimpleSceneStub::SimpleSceneStub(std::shared_ptr<AbstractCamera> scene_camera){
     this->scene_camera = scene_camera;

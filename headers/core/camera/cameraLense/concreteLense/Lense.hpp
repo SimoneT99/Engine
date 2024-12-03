@@ -13,7 +13,7 @@ class Lense : public AbstractLense{
     public:
 
         Lense(
-            float fov,
+            float vertical_fov,
             float aspect_ratio,
             float near_plane,
             float far_plane
@@ -22,17 +22,17 @@ class Lense : public AbstractLense{
         near_plane(near_plane),
         far_plane(far_plane) {}
 
-        glm::mat4x4 get_projection_matrix() const;
+        glm::mat4x4 get_projection_matrix() const override;
 
-        void set_vertical_fov(float vertical_fov);
-        void set_aspect_ratio(float aspect_ratio);
-        void set_near_plane(float near_plane);
-        void set_far_plane(float far_plane);
-        void bundled_change(float vertical_fov, float aspect_ratio, float near_plane, float far_plane);
+        void set_vertical_fov(float vertical_fov) override;
+        void set_aspect_ratio(float aspect_ratio) override;
+        void set_near_plane(float near_plane) override;
+        void set_far_plane(float far_plane) override;
+        void bundled_change(float vertical_fov, float aspect_ratio, float near_plane, float far_plane) override;
 
-        float get_vertical_fov() const;
-        float set_aspect_ratio() const;
-        float set_near_plane() const;
-        float set_far_plane() const;
+        float get_vertical_fov() const override;
+        float get_aspect_ratio() const override;
+        float get_near_plane() const override;
+        float get_far_plane() const override;
 
 };

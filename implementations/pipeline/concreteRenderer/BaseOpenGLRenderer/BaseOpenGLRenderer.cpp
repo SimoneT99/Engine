@@ -1,4 +1,4 @@
-#include "../headers/pipeline/concreteRenderer/baseOpenGLRenderer/BaseOpenGlRenderer.hpp"
+#include "../headers/pipeline/concreteRenderer/baseOpenGLRenderer/BaseOpenGLRenderer.hpp"
 
 std::vector<std::string> BaseOpenGLRenderer::parseShader(const std::string& filepath) const {
 
@@ -385,9 +385,9 @@ void BaseOpenGLRenderer::update_camera(){
             std::cout << "Current shader " << currentProgram << std::endl;
         #endif
 
-        glm::mat4x4 view_matrix = this->abstractScene->getCamera()->get_view_matrix();
+        glm::mat4x4 view_matrix = this->abstractScene->getCamera()->get_camera_object()->get_view_matrix();
         LOG(print_matrix(view_matrix))
-        glm::mat4x4 projection_matrix = this->abstractScene->getCamera()->get_projection_matrix();
+        glm::mat4x4 projection_matrix = this->abstractScene->getCamera()->get_lense()->get_projection_matrix();
         LOG(print_matrix(projection_matrix))
 
         LOG("Pushing view matrix data...")

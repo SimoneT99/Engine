@@ -1,4 +1,4 @@
-#include "../headers/core/camera/lenses/concreteLense/Lense.hpp"
+#include "../headers/core/camera/cameraLense/concreteLense/Lense.hpp"
 
 glm::mat4x4 Lense::get_projection_matrix() const{
     return glm::perspective(
@@ -21,6 +21,7 @@ void Lense::set_near_plane(float near_plane){
 void Lense::set_far_plane(float far_plane){
     this->far_plane = far_plane;
 }
+
 void Lense::bundled_change(float vertical_fov, float aspect_ratio, float near_plane, float far_plane){
     if(vertical_fov != NULL){
         this->vertical_fov = vertical_fov;
@@ -40,13 +41,13 @@ float Lense::get_vertical_fov() const{
     return this->vertical_fov;
 }
 
-float Lense::set_aspect_ratio() const{
+float Lense::get_aspect_ratio() const{
     return this->aspect_ratio;
 }
 
-float Lense::set_near_plane() const{
+float Lense::get_near_plane() const{
     return this->near_plane;
 }
-float Lense::set_far_plane() const{
+float Lense::get_far_plane() const{
     return this->far_plane;
 }
