@@ -118,7 +118,7 @@ int main(int argc, char* argv[]){
     /**
      * Since it's a shared pointer these changes should be reflected on the image rendered
      */
-    //transform_ptr->scale(0.5,0.5,0.5);
+    transform_ptr->scale(0.7,0.7,0.7);
     transform_ptr->rotate(glm::quat( 0.707, 0.0,  0.707, 0.0));
     transform_ptr->translate(0,0,0);
 
@@ -135,8 +135,8 @@ int main(int argc, char* argv[]){
     abstractRenderer->start();
 
     float temp = 0;
-    double tick_rate = 2; //updates in a second
-    double delta_time = 1.0/tick_rate;
+    double tick_rate = 30; //updates in a second
+    double delta_time = 1/tick_rate;
 
     auto start = std::chrono::high_resolution_clock::now();
     auto end = std::chrono::high_resolution_clock::now();
