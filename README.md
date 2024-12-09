@@ -1,6 +1,7 @@
 A custom game engine designed with these principles in mind:
-- Fast response time of the player input
-- Higly parallel to maximize performance in multi-threaded machines
-- Graphic pipeline indipendent: the idea is to allow programmers to develop their render pipeline if they want to do so
+- **Highly parallel**: Optimized to maximize performance on multi-threaded machines.
+- **Graphics pipeline independent**: Programmers can develop their own rendering pipelines if desired.
+- **Programmer-friendly**: Designed to be easy for developers to work with (specific details to be determined).
+- **Modular architecture**: The engine is being developed with modularity in mind, allowing each core component to be rewritten if needed. The default implementations will likely be fine-tuned for a specific style (yet to be decided).
 
-The project is a passion project and learning tool so do not threat this as a flashed out engine.
+This project is a passion project and a learning tool, so it should not be considered a fully fleshed-out engine.
