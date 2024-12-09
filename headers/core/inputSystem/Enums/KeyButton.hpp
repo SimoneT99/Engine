@@ -59,5 +59,5 @@ enum class KeyButton {
     ARROW_UP,
     ARROW_DOWN,
     ARROW_LEFT,
-    ARROW_RIGHT
+    ARROW_RIGHT,
 };

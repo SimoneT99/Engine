@@ -19,6 +19,6 @@ InputController::~InputController(){
 void InputController::inputLoop(){
 
     while(running){
-        //TODO: here we need to check the inputs
+        for
     }
 }
