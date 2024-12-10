@@ -50,6 +50,7 @@ class SDL2InputController : public AbstractInputController {
     // Mouse methods
     void get_mouse_position(float& x, float& y) const override;
     void get_mouse_delta(float& dx, float& dy) const override;
+    void get_mouse_wheel_delta(float& dx, float& dy) const override;
 
     bool mouse_button_pressed_down(MouseButton button) const override;
     bool mouse_button_pressed(MouseButton button) const override;

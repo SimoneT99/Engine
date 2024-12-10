@@ -60,4 +60,6 @@ enum class KeyButton {
     ARROW_DOWN,
     ARROW_LEFT,
     ARROW_RIGHT,
+
+    DEFAULT,
 };

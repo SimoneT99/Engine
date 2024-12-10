@@ -25,6 +25,7 @@ public:
     // Mouse methods
     virtual void get_mouse_position(float& x, float& y) const = 0;
     virtual void get_mouse_delta(float& dx, float& dy) const = 0;
+    virtual void get_mouse_wheel_delta(float& dx, float& dy) const = 0;
 
     virtual bool mouse_button_pressed_down(MouseButton button) const = 0;
     virtual bool mouse_button_pressed(MouseButton button) const = 0;

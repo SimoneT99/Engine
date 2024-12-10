@@ -13,4 +13,7 @@ class AbstractKeyboardManager : public AbstractButtonManager{
 
         virtual bool bind_key_event(KeyButton button, ButtonState event, AbstractInputCommand action) = 0;
         virtual bool unbind_key_event(KeyButton button, ButtonState event) = 0;
+
+        virtual void press_button(KeyButton button);
+        virtual void release_button(KeyButton button);
 };
