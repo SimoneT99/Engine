@@ -6,13 +6,13 @@
 
 /**
  * Interface of the input system
- * BAD: Smell of fat interface...
+ * BAD: Smell of fat interface... ...but it's a whole system...
  */
 
-class AbstractInputController {
+class InputControllerInterface {
 
 public:
-    virtual ~AbstractInputController() = default;
+    virtual ~InputControllerInterface() = default;
 
     // Polling methods for keyboard
     virtual bool key_pressed_down(KeyButton button) const = 0;

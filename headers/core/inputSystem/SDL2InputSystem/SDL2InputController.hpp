@@ -10,7 +10,7 @@
 #include <iostream>
 #include <map>
 
-class SDL2InputController : public AbstractInputController {
+class SDL2InputController : public InputControllerInterface {
 
     private:
         //States
