@@ -39,4 +39,9 @@ class InputSystem{
      * WARNING: DO NOT CALL THIS BEFORE YOU SET THE BUILDER 
      */
     void startInputSystem();
+
+    /**
+     * method to get the handle of the "controller", that is the true input system
+     */
+    std::shared_ptr<InputControllerInterface> getInputController();
 };

@@ -1,4 +1,9 @@
-enum class ControllerButton {
+#include <string>
+#include <vector>
+
+namespace Enums{
+
+    enum class ControllerButton {
 
     //controller buttons
     CONTROLLER_DPAD_UP,
@@ -21,3 +26,12 @@ enum class ControllerButton {
     
     DEFAULT
 };
+
+class ControllerButtonHelper{
+
+    public:
+        static std::string controllerButtonToString(ControllerButton controllerButton);
+        static std::vector<ControllerButton> getControllerButtons();
+};
+
+}

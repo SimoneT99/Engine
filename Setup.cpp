@@ -9,5 +9,5 @@ std::shared_ptr<AbstractInputControllerBuilder> Setup::get_input_controller_buil
     /**
      * Here you can setup the builder as you want
      */
-    return std::make_shared<AbstractInputControllerBuilder>();
+    return std::make_shared<SDL2InputControllerBuilder>();
 }

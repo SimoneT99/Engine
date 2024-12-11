@@ -1,7 +1,12 @@
+#include <string>
+#include <vector>
+
 /*
     Engine rapresentation for common buttons
     thanks chatGpt
 */
+
+namespace Enums{
 
 enum class KeyButton {
 
@@ -63,3 +68,13 @@ enum class KeyButton {
 
     DEFAULT,
 };
+
+class KeyButtonHelper{
+
+    public:
+        static std::string keyButtonToString(KeyButton keyButton);
+        static std::vector<KeyButton> getKeyButtons();
+
+};
+
+}

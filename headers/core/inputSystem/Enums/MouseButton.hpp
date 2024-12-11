@@ -1,3 +1,8 @@
+#include <string>
+#include <vector>
+
+namespace Enums{
+
 enum MouseButton{
 
     // Mouse Buttons
@@ -13,3 +18,12 @@ enum MouseButton{
 
     DEFAULT
 };
+
+class MouseButtonHelper{
+
+    public:
+        static std::string mouseButtonToString(MouseButton mouseButton);
+        static std::vector<MouseButton> getMouseButtons();
+};
+
+}

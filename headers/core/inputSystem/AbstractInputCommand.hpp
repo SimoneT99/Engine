@@ -4,5 +4,5 @@
 
 class AbstractInputCommand{
     public:
-        void execute_command();
+        virtual void execute_command() = 0;
 };
