@@ -1,6 +1,5 @@
 #include "../headers\core\inputSystem\InputControllerInterface.hpp"
 #include "../include/SDL2/SDL.h"
-#include "../headers/core/inputSystem/Enums/ButtonState.hpp"
 #include "../headers/core/inputSystem/AbstractInputCommand.hpp"
 
 #include "../headers/core/inputSystem/SDL2InputSystem/periferalManagement/AbstractMouseManager.hpp"
@@ -13,8 +12,7 @@
 class SDL2InputController : public InputControllerInterface {
 
     private:
-        //States
-
+    
         /**
          * Managers. (i know it's a bad name...).
          * TODO: who build and manages these? We need dependency injection somehow? Builder maybe?
@@ -34,38 +32,53 @@ class SDL2InputController : public InputControllerInterface {
 
         void update_loop();
 
-
     public:
-    SDL2InputController();
-    ~SDL2InputController();
 
-    // Polling methods for keyboard
-    bool key_pressed_down(KeyButton button) const override;
-    bool key_pressed(KeyButton button) const override;
-    bool key_released(KeyButton button) const override;
+        SDL2InputController();
+        ~SDL2InputController();
 
-    bool bind_key_event(KeyButton button, ButtonState event, AbstractInputCommand action) override;
-    bool unbind_key_event(KeyButton button, ButtonState event) override;
+        /**
+         * Interface methods
+         */
 
-    // Mouse methods
-    void get_mouse_position(float& x, float& y) const override;
-    void get_mouse_delta(float& dx, float& dy) const override;
-    void get_mouse_wheel_delta(float& dx, float& dy) const override;
+        // Polling methods for keyboard
+        bool key_pressed_down(Enums::KeyButton button) const override;
+        bool key_pressed(Enums::KeyButton button) const override;
+        bool key_released(Enums::KeyButton button) const override;
 
-    bool mouse_button_pressed_down(MouseButton button) const override;
-    bool mouse_button_pressed(MouseButton button) const override;
-    bool mouse_button_released(MouseButton button) const override;
+        void bind_key_event(Enums::KeyButton button, Enums::ButtonEvent event, std::unique_ptr<AbstractInputCommand> action) override;
+        void unbind_key_event(Enums::KeyButton button, Enums::ButtonEvent event) override;
 
-    bool bind_mouse_event(MouseButton button, ButtonState event, AbstractInputCommand action) override;
-    bool unbind_mouse_event(MouseButton button, ButtonState event) override;
+        // Mouse methods
+        void get_mouse_position(float& x, float& y) const override;
+        void get_mouse_delta(float& dx, float& dy) const override;
+        void get_mouse_wheel_delta(float& dx, float& dy) const override;
 
-    // Controller methods
-    bool contoller_button_pressed_down(int controllerId, ControllerButton button) const override;
-    bool contoller_button_pressed(int controllerId, ControllerButton button) const override;
-    bool contoller_button_released(int controllerId, ControllerButton button) const override;
-    
-    void get_controller_axis(int controllerId, ControllerAxis axis, float& value) const override;
+        bool mouse_button_pressed_down(Enums::MouseButton button) const override;
+        bool mouse_button_pressed(Enums::MouseButton button) const override;
+        bool mouse_button_released(Enums::MouseButton button) const override;
 
-    bool bind_controller_event(int controllerId, ControllerButton button, ButtonState event, AbstractInputCommand action) override;
-    bool unbind_controller_event(int controllerId, ControllerButton button, ButtonState event) override;
+        void bind_mouse_event(Enums::MouseButton button, Enums::ButtonEvent event, std::unique_ptr<AbstractInputCommand> action) override;
+        void unbind_mouse_event(Enums::MouseButton button, Enums::ButtonEvent event) override;
+
+        // Controller methods
+        bool controller_button_pressed_down(int controllerId, Enums::ControllerButton button) const override;
+        bool controller_button_pressed(int controllerId, Enums::ControllerButton button) const override;
+        bool controller_button_released(int controllerId, Enums::ControllerButton button) const override;
+        
+        void get_controller_axis(int controllerId, Enums::ControllerAxis axis, float& value) const override;
+
+        void bind_controller_event(int controllerId, Enums::ControllerButton button, Enums::ButtonEvent event, std::unique_ptr<AbstractInputCommand> action) override;
+        void unbind_controller_event(int controllerId, Enums::ControllerButton button, Enums::ButtonEvent event) override;
+
+        virtual bool is_binded() = 0;
+        virtual void tick() = 0;
+
+        /**
+         * Methods used to setup or manage internally the system
+         */
+
+        void set_keyboard_manager(std::shared_ptr<AbstractKeyboardManager> keyboardManager);
+        void set_mouse_manager(std::shared_ptr<AbstractMouseManager> mouseManager);
+
 };

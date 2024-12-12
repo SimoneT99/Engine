@@ -103,15 +103,15 @@ bool SDL2InputController::unbind_mouse_event(MouseButton button, ButtonState eve
 
 
 // Controller methods
-bool SDL2InputController::contoller_button_pressed_down(int controllerId, ControllerButton button) const{
+bool SDL2InputController::controller_button_pressed_down(int controllerId, ControllerButton button) const{
     return this->check_button_pressed_down(this->get_controller_button_state(controllerId, button));
 }
 
-bool SDL2InputController::contoller_button_pressed(int controllerId, ControllerButton button) const{
+bool SDL2InputController::controller_button_pressed(int controllerId, ControllerButton button) const{
     return this->check_button_pressed(this->get_controller_button_state(controllerId, button));
 }
 
-bool SDL2InputController::contoller_button_released(int controllerId, ControllerButton button) const{
+bool SDL2InputController::controller_button_released(int controllerId, ControllerButton button) const{
     return this->check_button_released(this->get_controller_button_state(controllerId, button));
 }
    

@@ -8,9 +8,9 @@
 class AbstractControllerManager : public AbstractButtonManager{
 
     public:
-        virtual bool contoller_button_pressed_down(ControllerButton button) const = 0;
-        virtual bool contoller_button_pressed(ControllerButton button) const = 0;
-        virtual bool contoller_button_released(ControllerButton button) const = 0;
+        virtual bool controller_button_pressed_down(ControllerButton button) const = 0;
+        virtual bool controller_button_pressed(ControllerButton button) const = 0;
+        virtual bool controller_button_released(ControllerButton button) const = 0;
     
         virtual void get_controller_axis(ControllerAxis axis, float& value) const = 0;
 

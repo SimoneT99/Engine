@@ -12,9 +12,9 @@ class ControllerManager : public AbstractControllerManager{
         inline ButtonState get_controller_button_state(ControllerButton button) const;
 
     public:
-        bool contoller_button_pressed_down(ControllerButton button) const override;
-        bool contoller_button_pressed(ControllerButton button) const override;
-        bool contoller_button_released(ControllerButton button) const override;
+        bool controller_button_pressed_down(ControllerButton button) const override;
+        bool controller_button_pressed(ControllerButton button) const override;
+        bool controller_button_released(ControllerButton button) const override;
     
         void get_controller_axis(ControllerAxis axis, float& value) const override;
 

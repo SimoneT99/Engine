@@ -5,15 +5,15 @@ inline ButtonState ControllerManager::get_controller_button_state(ControllerButt
     return state != this->controller_buttons.end() ? state->second : ButtonState::UNPRESSED;
 }
 
-bool ControllerManager::contoller_button_pressed_down(ControllerButton button) const{
+bool ControllerManager::controller_button_pressed_down(ControllerButton button) const{
     return this->check_button_pressed_down(this->get_controller_button_state(button));
 }
 
-bool ControllerManager::contoller_button_pressed(ControllerButton button) const{
+bool ControllerManager::controller_button_pressed(ControllerButton button) const{
     return this->check_button_pressed(this->get_controller_button_state(button));
 }
 
-bool ControllerManager::contoller_button_released(ControllerButton button) const{
+bool ControllerManager::controller_button_released(ControllerButton button) const{
     return this->check_button_released(this->get_controller_button_state(button));
 }
    

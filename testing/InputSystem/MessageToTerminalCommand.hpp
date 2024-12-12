@@ -13,5 +13,5 @@ class MessageToTerminalCommand : public AbstractInputCommand{
 
     public:
         MessageToTerminalCommand(std::string message) : message(message) {}
-        void execute_command();
+        void execute_command() override;
 };
